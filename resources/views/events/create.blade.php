@@ -1,6 +1,4 @@
-@extends('layouts.app')
 
-@section('content')
 <div class="container mx-auto mt-5">
     <h1 class="text-2xl font-semibold mb-4">Create New Event</h1>
 
@@ -50,4 +48,3 @@
         <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Create Event</button>
     </form>
 </div>
-@endsection

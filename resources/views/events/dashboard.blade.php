@@ -1,6 +1,3 @@
-@extends('layouts.app')
-
-@section('content')
 <div class="container mx-auto mt-5">
 
     <h1 class="text-2xl font-semibold">Event Dashboard</h1>
@@ -69,4 +66,3 @@
         </section>
     </div>
 </div>
-@endsection

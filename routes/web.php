@@ -29,10 +29,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('events', EventController::class);
-    Route::post('/events/{eventId}/join', [EventController::class, 'joinEvent'])->name('events.join');
+    Route::post('/events/{id}/join', [EventController::class, 'joinEvent'])->name('events.join');
     Route::post('/events/approve/{participantId}', [EventController::class, 'approveJoinRequest'])->name('events.approve');
     Route::post('/events/reject/{participantId}', [EventController::class, 'rejectJoinRequest'])->name('events.reject');
     Route::get('/events/dashboard', [EventController::class, 'dashboard'])->name('events.dashboard');
+    Route::get('/events/{eventId}/show', [EventController::class, 'show'])->name('events.show');
+
 
 });
 
@@ -46,18 +48,14 @@ Route::put('/events/{id}', [EventController::class, 'update'])->name('events.upd
 Route::delete('/events/{id}', [EventController::class, 'destroy'])->name('events.destroy');
 
 Route::middleware(['auth'])->group(function () {
-    // Display a paginated list of all events
     Route::get('events', [EventController::class, 'index'])->name('events.index');
 
-    // Create event
     Route::get('events/create', [EventController::class, 'create'])->name('events.create');
     Route::post('events', [EventController::class, 'store'])->name('events.store');
 
-    // Edit event
     Route::get('events/{event}/edit', [EventController::class, 'edit'])->name('events.edit')->middleware('check.event.ownership:event');
     Route::put('events/{event}', [EventController::class, 'update'])->name('events.update')->middleware('check.event.ownership:event');
 
-    // Delete event
     Route::delete('events/{event}', [EventController::class, 'destroy'])->name('events.destroy')->middleware('check.event.ownership:event');
 });
 require __DIR__.'/auth.php';

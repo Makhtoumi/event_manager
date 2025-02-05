@@ -1,7 +1,5 @@
 
-@extends('layouts.app')
 
-@section('content')
 <div class="container mx-auto mt-5">
 
     <h1 class="text-2xl font-semibold mb-4">All Events</h1>
@@ -35,8 +33,11 @@
                 <div class="border p-4 rounded shadow-md">
                     <h3 class="text-lg font-semibold">{{ $event->title }}</h3>
                     <p>{{ $event->location }}</p>
-                    <p>{{ $event->date }} at {{ $event->time }}</p>
+                    <p>{{ $event->date }} at {{ $event->time }}</p>                
                     <a href="{{ route('events.show', $event->id) }}" class="text-blue-500 hover:underline">View Details</a>
+                    <form action="{{ route('events.join', $event->id) }}" method="POST">  
+                    <a href="{{ route('events.join', ['id' => $event->id]) }}">Join Event</a>
+                    </form>
                 </div>
             @endforeach
         </div>
@@ -46,4 +47,3 @@
         </div>
     @endif
 </div>
-@endsection

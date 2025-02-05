@@ -31,4 +31,6 @@ class Event extends Model
 
         $this->save();
     }
+
+
 }
