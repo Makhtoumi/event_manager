@@ -47,6 +47,14 @@
             @endif
         </div>
 
+        <form action="{{ route('events.join', $event->id) }}" method="POST">
+                                @csrf
+                                <button type="submit"
+                                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                                    Join Event
+                                </button>
+                            </form>
+
     </div>
 
 </body>
