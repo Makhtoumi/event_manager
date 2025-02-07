@@ -228,10 +228,16 @@ class EventController extends Controller
 
     public function show($eventId)
     {   
-        $event = Event::where('user_id', Auth::id())
-        ->with('participants') // Eager load participants (which are User models)
-        ->get();
-        return view('events.show', compact('event' ));
+        $event = Event::where('id', $eventId)
+                      ->with('participants')
+                      ->first(); // Use first() to get a single event, or null if not found
+        
+        // Check if the event exists, otherwise return a 404 or some other error message
+        if (!$event) {
+            return abort(404, 'Event not found'); // Or handle this differently
+        }
+        
+        return view('events.show', compact('event'));
     }
 }
 
