@@ -22,6 +22,13 @@
             </div>
         @endif
 
+        <!-- Dashboard Access Button -->
+        <div class="text-center mb-6">
+            <a href="{{ route('events.dashboard') }}" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                Go to Dashboard
+            </a>
+        </div>
+
         <h1 class="text-3xl font-bold text-gray-700 mb-6">All Events</h1>
 
         <!-- Search & Filter -->

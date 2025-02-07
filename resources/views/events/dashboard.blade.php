@@ -38,7 +38,10 @@
                         @endforeach
                     </div>
                 @endif
-                <a href="{{ route('events.my') }}" class="block mt-4 text-blue-500 hover:underline">Manage My Events</a>
+                <a href="{{ route('events.my') }}" class="inline-block mt-4 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105">
+    Manage My Events
+</a>
+
             </section>
 
             <hr class="border-gray-300">
