@@ -26,7 +26,7 @@ class Event extends Model
         $now = Carbon::now();
         if ($this->date > $now) {
             $this->status = 'upcoming';
-        } elseif ($this->date <= $now && $this->date->addHours(2) >= $now) {
+        } elseif ($this->date <= $now && $this->date->addHours(24) >= $now) {
             $this->status = 'ongoing';
         } else {
             $this->status = 'completed';

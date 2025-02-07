@@ -44,6 +44,23 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
+
+    /**
+     * Define the application's command schedule.
+     *
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule
+     * @return void
+     */
+   protected function schedule(Schedule $schedule)
+   {
+       // Schedule the event status update to run daily at midnight
+       $schedule->command('events:update-status')->dailyAt('00:00');
+   }
+    protected $commands = [
+        \App\Console\Commands\UpdateEventStatus::class,
+    ];
+    
+    
     
     protected $routeMiddleware = [
         // Other middleware

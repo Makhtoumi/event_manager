@@ -11,6 +11,14 @@
     <div class="container mx-auto max-w-6xl bg-white shadow-lg rounded-xl p-8">
         <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">🎉 Event Dashboard</h1>
 
+        <!-- Create New Event Button -->
+        <div class="text-right mb-4">
+            <a href="{{ route('events.create') }}" 
+               class="inline-block bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                + Create New Event
+            </a>
+        </div>
+
         <div class="mt-5 space-y-10">
 
             <!-- My Events Section -->
@@ -30,7 +38,7 @@
                         @endforeach
                     </div>
                 @endif
-                <a href="{{ route('events.my') }}" class="block mt-4 text-blue-500 hover:underline">View All My Events</a>
+                <a href="{{ route('events.my') }}" class="block mt-4 text-blue-500 hover:underline">Manage My Events</a>
             </section>
 
             <hr class="border-gray-300">
