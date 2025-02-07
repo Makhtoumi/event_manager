@@ -19,6 +19,9 @@
                     @endforeach
                 </div>
             @endif
+
+            <a href="{{ route('events.my') }}" class="text-blue-500 hover:underline">My Events</a>
+
         </section>
 
         <hr class="my-6">

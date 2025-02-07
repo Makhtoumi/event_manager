@@ -1,23 +1,18 @@
-<div class="container mx-auto mt-5">
-    <div class="border p-6 rounded-lg shadow-md">
-        <h1 class="text-2xl font-bold">{{ $event->title }}</h1>
-        <p><strong>Location:</strong> {{ $event->location }}</p>
-        <p><strong>Date:</strong> {{ $event->date }} at {{ $event->time }}</p>
-        <p><strong>Description:</strong> {{ $event->description }}</p>
-        <p><strong>Max Participants:</strong> {{ $event->max_participants }}</p>
+@foreach($event as $e)
+    <h2>{{ $e->title }}</h2>
+    <p>{{ $e->description }}</p>
+    <p>{{ $e->location }}</p>
+    <p>{{ $e->max_participants }}</p>
+    <p>{{ $e->status }}</p>
 
-        <hr class="my-4">
 
-        <h3 class="text-xl font-semibold">Join Requests:</h3>
-        @if ($event->participants && $event->participants->count())
-    @foreach ($event->participants as $participant)
-        <div>
-            <p>{{ $participant->user->name }} - Status: {{ ucfirst($participant->status) }}</p>
-        </div>
-    @endforeach
 
-@endif
-
-    </div>
-</div>
-
+    <h2>Participants:</h2>
+    <ul>
+        @foreach($e->participants as $participant)
+            <li>
+                {{ $participant->name }} (Status: {{ $participant->pivot->status }})
+            </li>
+        @endforeach
+    </ul>
+@endforeach

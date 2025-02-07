@@ -14,21 +14,23 @@ class Event extends Model
         'user_id', 'title', 'description', 'location', 'date', 'time', 'max_participants', 'status'
     ];
 
-    // Function to set event status
+    public function participants()
+    {
+        return $this->belongsToMany(User::class, 'event_participants')
+                    ->withPivot('status') // Include the pivot table's 'status' column
+                    ->withTimestamps(); // Include the pivot table's timestamps
+    }
+
     public function setStatus()
     {
-        $currentDateTime = Carbon::now();
-
-        $eventDateTime = Carbon::parse($this->date . ' ' . $this->time);
-
-        if ($eventDateTime->isFuture()) {
-            $this->status = 'Upcoming'; // Event is in the future
-        } elseif ($eventDateTime->isPast()) {
-            $this->status = 'Completed'; // Event has passed
+        $now = Carbon::now();
+        if ($this->date > $now) {
+            $this->status = 'upcoming';
+        } elseif ($this->date <= $now && $this->date->addHours(2) >= $now) {
+            $this->status = 'ongoing';
         } else {
-            $this->status = 'Ongoing'; // Event is happening now
+            $this->status = 'completed';
         }
-
         $this->save();
     }
 

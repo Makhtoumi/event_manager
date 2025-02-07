@@ -28,16 +28,14 @@ class EventController extends Controller
             });
         }
 
-        // Filter by status
         if ($status) {
             if ($status == 'upcoming') {
                 $events = $events->where('date', '>', Carbon::now());
             } elseif ($status == 'ongoing') {
                 $events = $events->where('date', '<=', Carbon::now())
-                                 ->where('status', 'Upcoming');
+                                 ->where('status', 'ongoing');
             } elseif ($status == 'completed') {
-                $events = $events->where('date', '<', Carbon::now())
-                                 ->where('status', 'Completed');
+                $events = $events->where('status', 'completed');
             }
         }
 
@@ -94,9 +92,12 @@ class EventController extends Controller
 
     public function edit($id)
     {
-        $event = Event::where('user_id', Auth::id())->findOrFail($id);
+        $event = Event::findOrFail($id);
+        $this->authorize('update', $event); // Check if the user can update the event
         return view('events.edit', compact('event'));
     }
+    
+
 
 
     public function update(Request $request, $id)
@@ -131,37 +132,48 @@ class EventController extends Controller
     // Delete an event
     public function destroy($id)
     {
-        $event = Event::where('user_id', Auth::id())->findOrFail($id);
+        $event = Event::findOrFail($id);
+        $this->authorize('delete', $event); // Check if the user can delete the event
         $event->delete();
-
         return redirect()->route('events.index')->with('success', 'Event deleted successfully.');
+    }
+
+    // app/Http/Controllers/EventController.php
+    public function myEvents()
+    {
+        // Get the logged-in user's events with their participants and user details
+        $events = Event::where('user_id', Auth::id())
+                       ->with('participants') // Eager load participants (which are User models)
+                       ->get();
+    
+        return view('events.my', compact('events'));
     }
 
     public function joinEvent($eventId)
     {
         $event = Event::findOrFail($eventId);
-
- 
+    
+        // Check if the user has already requested to join
         $existingRequest = EventParticipant::where('event_id', $event->id)
-                                            ->where('user_id', Auth::id())
-                                            ->first();
+                                          ->where('user_id', Auth::id())
+                                          ->first();
         if ($existingRequest) {
             return redirect()->route('events.index')->with('error', 'You have already requested to join this event.');
         }
-
-
+    
+        // Check if the event is full
         $participantCount = $event->participants()->count();
         if ($participantCount >= $event->max_participants) {
             return redirect()->route('events.index')->with('error', 'This event is full.');
         }
-
-   
+    
+        // Create the participation record
         EventParticipant::create([
             'event_id' => $event->id,
             'user_id' => Auth::id(),
             'status' => 'pending',
         ]);
-
+    
         return redirect()->route('events.index')->with('success', 'Your request to join the event has been sent.');
     }
 
@@ -208,20 +220,22 @@ class EventController extends Controller
     public function dashboard()
     {
         $myEvents = Event::where('user_id', Auth::id())->get();
-
-        $joinedEvents = EventParticipant::where('user_id', Auth::id())
-                                        ->where('status', 'confirmed')
-                                        ->with('event')
-                                        ->get()->pluck('event'); 
-
-        $allEvents = Event::paginate(10); 
-
+    
+        $joinedEvents = Event::whereHas('participants', function ($query) {
+            $query->where('user_id', Auth::id())->where('status', 'confirmed');
+        })->get();
+    
+        $allEvents = Event::paginate(10);
+    
         return view('events.dashboard', compact('myEvents', 'joinedEvents', 'allEvents'));
     }
-public function show($eventId)
-    {
-        $event = Event::findOrFail($eventId);
-        return view('events.show', compact('event'));
+
+    public function show($eventId)
+    {   
+        $event = Event::where('user_id', Auth::id())
+        ->with('participants') // Eager load participants (which are User models)
+        ->get();
+        return view('events.show', compact('event' ));
     }
 }
 

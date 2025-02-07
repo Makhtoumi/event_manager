@@ -1,4 +1,18 @@
 
+<div class="container mx-auto mt-5">
+    <!-- Display Success and Error Messages -->
+    @if (session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline">{{ session('error') }}</span>
+        </div>
+    @endif
+
 
 <div class="container mx-auto mt-5">
 
@@ -35,8 +49,9 @@
                     <p>{{ $event->location }}</p>
                     <p>{{ $event->date }} at {{ $event->time }}</p>                
                     <a href="{{ route('events.show', $event->id) }}" class="text-blue-500 hover:underline">View Details</a>
-                    <form action="{{ route('events.join', $event->id) }}" method="POST">  
-                    <a href="{{ route('events.join', ['id' => $event->id]) }}">Join Event</a>
+                    <form action="{{ route('events.join', $event->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-primary">Join Event</button>
                     </form>
                 </div>
             @endforeach

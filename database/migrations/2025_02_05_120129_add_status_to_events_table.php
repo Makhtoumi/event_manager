@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('events', function (Blueprint $table) {
-          $table->string('status')->default('Upcoming');
-
-        });
+        if (!Schema::hasColumn('events', 'status')) {
+            Schema::table('events', function (Blueprint $table) {
+                $table->string('status')->default('Upcoming');
+            });
+        }
     }
-
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
-        Schema::table('events', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
+        if (Schema::hasColumn('events', 'status')) {
+            Schema::table('events', function (Blueprint $table) {
+                $table->dropColumn('status');
+            });
+        }
     }
 };

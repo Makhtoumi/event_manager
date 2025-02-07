@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Event;
+use Illuminate\Http\Request;
 
 class CheckEventOwnership
 {
@@ -13,18 +14,25 @@ class CheckEventOwnership
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  int  $eventId
+     * @param  string  $model
      * @return mixed
      */
-    public function handle($request, Closure $next, $eventId)
+    public function handle(Request $request, Closure $next, $param)
     {
-        $event = Event::findOrFail($eventId);
-
-        // Check if the logged-in user is the event owner
-        if ($event->user_id !== Auth::id()) {
-            return redirect()->route('events.index')->with('error', 'You are not authorized to manage this event.');
+        // The event parameter should now be resolved to an instance of the Event model
+        $event = $request->route('event');
+        
+        // Ensure $event is an instance of Event
+        if (!$event instanceof Event) {
+            abort(404, 'Event not found');
         }
-
+    
+        // Check if the authenticated user owns the event
+        if ($event->user_id !== auth()->id()) {
+            abort(403, 'You are not authorized to perform this action.');
+        }
+    
         return $next($request);
     }
+
 }
