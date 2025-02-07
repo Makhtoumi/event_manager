@@ -1,71 +1,86 @@
-<div class="container mx-auto mt-5">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen p-6">
 
-    <h1 class="text-2xl font-semibold">Event Dashboard</h1>
+    <div class="container mx-auto max-w-6xl bg-white shadow-lg rounded-xl p-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">🎉 Event Dashboard</h1>
 
-    <div class="mt-5">
-        <section>
-            <h2 class="text-xl font-bold">My Events</h2>
-            @if ($myEvents->isEmpty())
-                <p>No events created yet.</p>
-            @else
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach ($myEvents as $event)
-                        <div class="border p-4 rounded shadow-md">
-                            <h3 class="text-lg font-semibold">{{ $event->title }}</h3>
-                            <p>{{ $event->location }}</p>
-                            <p>{{ $event->date }} at {{ $event->time }}</p>
-                            <a href="{{ route('events.show', $event->id) }}" class="text-blue-500 hover:underline">View Details</a>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
+        <div class="mt-5 space-y-10">
 
-            <a href="{{ route('events.my') }}" class="text-blue-500 hover:underline">My Events</a>
+            <!-- My Events Section -->
+            <section>
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">📌 My Events</h2>
+                @if ($myEvents->isEmpty())
+                    <p class="text-gray-600">No events created yet.</p>
+                @else
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach ($myEvents as $event)
+                            <div class="bg-white border border-gray-200 p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                                <h3 class="text-lg font-semibold text-gray-700">{{ $event->title }}</h3>
+                                <p class="text-sm text-gray-600">{{ $event->location }}</p>
+                                <p class="text-sm text-gray-500">{{ $event->date }} at {{ $event->time }}</p>
+                                <a href="{{ route('events.show', $event->id) }}" class="mt-2 inline-block text-blue-500 hover:underline">View Details</a>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+                <a href="{{ route('events.my') }}" class="block mt-4 text-blue-500 hover:underline">View All My Events</a>
+            </section>
 
-        </section>
+            <hr class="border-gray-300">
 
-        <hr class="my-6">
+            <!-- Joined Events Section -->
+            <section>
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">✅ Joined Events</h2>
+                @if ($joinedEvents->isEmpty())
+                    <p class="text-gray-600">You have not joined any events yet.</p>
+                @else
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach ($joinedEvents as $event)
+                            <div class="bg-white border border-gray-200 p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                                <h3 class="text-lg font-semibold text-gray-700">{{ $event->title }}</h3>
+                                <p class="text-sm text-gray-600">{{ $event->location }}</p>
+                                <p class="text-sm text-gray-500">{{ $event->date }} at {{ $event->time }}</p>
+                                <a href="{{ route('events.show', $event->id) }}" class="mt-2 inline-block text-blue-500 hover:underline">View Details</a>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </section>
 
-        <section>
-            <h2 class="text-xl font-bold">Joined Events</h2>
-            @if ($joinedEvents->isEmpty())
-                <p>You have not joined any events yet.</p>
-            @else
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach ($joinedEvents as $event)
-                        <div class="border p-4 rounded shadow-md">
-                            <h3 class="text-lg font-semibold">{{ $event->title }}</h3>
-                            <p>{{ $event->location }}</p>
-                            <p>{{ $event->date }} at {{ $event->time }}</p>
-                            <a href="{{ route('events.show', $event->id) }}" class="text-blue-500 hover:underline">View Details</a>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-        </section>
+            <hr class="border-gray-300">
 
-        <hr class="my-6">
+            <!-- All Events Section -->
+            <section>
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">🌍 All Events</h2>
+                @if ($allEvents->isEmpty())
+                    <p class="text-gray-600">No events available at the moment.</p>
+                @else
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach ($allEvents as $event)
+                            <div class="bg-white border border-gray-200 p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                                <h3 class="text-lg font-semibold text-gray-700">{{ $event->title }}</h3>
+                                <p class="text-sm text-gray-600">{{ $event->location }}</p>
+                                <p class="text-sm text-gray-500">{{ $event->date }} at {{ $event->time }}</p>
+                                <a href="{{ route('events.show', $event->id) }}" class="mt-2 inline-block text-blue-500 hover:underline">View Details</a>
+                            </div>
+                        @endforeach
+                    </div>
 
-        <section>
-            <h2 class="text-xl font-bold">All Events</h2>
-            @if ($allEvents->isEmpty())
-                <p>No events available at the moment.</p>
-            @else
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach ($allEvents as $event)
-                        <div class="border p-4 rounded shadow-md">
-                            <h3 class="text-lg font-semibold">{{ $event->title }}</h3>
-                            <p>{{ $event->location }}</p>
-                            <p>{{ $event->date }} at {{ $event->time }}</p>
-                            <a href="{{ route('events.show', $event->id) }}" class="text-blue-500 hover:underline">View Details</a>
-                        </div>
-                    @endforeach
-                </div>
-
-                <div class="mt-4">
-                    {{ $allEvents->links() }}
-                </div>
-            @endif
-        </section>
+                    <!-- Pagination -->
+                    <div class="mt-6 flex justify-center">
+                        {{ $allEvents->links('pagination::tailwind') }}
+                    </div>
+                @endif
+            </section>
+        </div>
     </div>
-</div>
+
+</body>
+</html>

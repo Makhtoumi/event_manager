@@ -89,10 +89,8 @@ class EventController extends Controller
 
     
    
-
-    public function edit($id)
+    public function edit(Event $event)
     {
-        $event = Event::findOrFail($id);
         $this->authorize('update', $event); // Check if the user can update the event
         return view('events.edit', compact('event'));
     }
@@ -100,12 +98,12 @@ class EventController extends Controller
 
 
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Event $event)
     {
-        $event = Event::where('user_id', Auth::id())->findOrFail($id);
+        $this->authorize('update', $event); // Check if the user can update the event
     
         $request->validate([
-            'title' => 'required|string|unique:events,title,' . $id . ',id,user_id,' . Auth::id(),
+            'title' => 'required|string|unique:events,title,' . $event->id . ',id,user_id,' . Auth::id(),
             'description' => 'nullable|string',
             'location' => 'required|string',
             'date' => 'required|date|after:today',
@@ -122,23 +120,21 @@ class EventController extends Controller
             'max_participants' => $request->max_participants,
         ]);
     
- 
         $event->setStatus();
     
         return redirect()->route('events.index')->with('success', 'Event updated successfully.');
     }
-
     
-    // Delete an event
-    public function destroy($id)
+    public function destroy(Event $event)
     {
-        $event = Event::findOrFail($id);
         $this->authorize('delete', $event); // Check if the user can delete the event
         $event->delete();
         return redirect()->route('events.index')->with('success', 'Event deleted successfully.');
     }
 
-    // app/Http/Controllers/EventController.php
+    
+
+
     public function myEvents()
     {
         // Get the logged-in user's events with their participants and user details

@@ -17,21 +17,12 @@ class CheckEventOwnership
      * @param  string  $model
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $param)
+    public function handle(Request $request, Closure $next, $model)
     {
-        // The event parameter should now be resolved to an instance of the Event model
-        $event = $request->route('event');
-        
-        // Ensure $event is an instance of Event
-        if (!$event instanceof Event) {
-            abort(404, 'Event not found');
-        }
-    
-        // Check if the authenticated user owns the event
+        $event = $request->route($model); // Get the event from the route parameter
         if ($event->user_id !== auth()->id()) {
             abort(403, 'You are not authorized to perform this action.');
         }
-    
         return $next($request);
     }
 
