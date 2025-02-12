@@ -48,11 +48,7 @@ Route::middleware('auth')->group(function () {
 // Route::get('/events/{id}/edit', [EventController::class, 'edit'])->name('events.edit');
 // Route::put('/events/{id}', [EventController::class, 'update'])->name('events.update');
 // Route::delete('/events/{id}', [EventController::class, 'destroy'])->name('events.destroy');
-Route::middleware(['auth'])->group(function () {
-    Route::get('events/{event}/edit', [EventController::class, 'edit'])->name('events.edit')->middleware('check.event.ownership:event');
-    Route::put('events/{event}', [EventController::class, 'update'])->name('events.update')->middleware('check.event.ownership:event');
-    Route::delete('events/{event}', [EventController::class, 'destroy'])->name('events.destroy')->middleware('check.event.ownership:event');
-});
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [EventController::class, 'index'])->name('events.index');
