@@ -13,12 +13,17 @@ class Event extends Model
     protected $fillable = [
         'user_id', 'title', 'description', 'location', 'date', 'time', 'max_participants', 'status'
     ];
-
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function participants()
     {
         return $this->belongsToMany(User::class, 'event_participants')
-                    ->withPivot('status') // Include the pivot table's 'status' column
-                    ->withTimestamps(); // Include the pivot table's timestamps
+                    ->withPivot('status') 
+                    ->withTimestamps(); 
+
     }
 
     public function setStatus()

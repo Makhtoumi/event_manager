@@ -30,8 +30,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('events', EventController::class);
     Route::post('/events/{id}/join', [EventController::class, 'joinEvent'])->name('events.join');
-    Route::get('/events/approve/{participantId}', [EventController::class, 'approveJoinRequest'])->name('events.approve');
-    Route::get('/events/reject/{participantId}', [EventController::class, 'rejectJoinRequest'])->name('events.reject');
+    Route::post('/events/{event}/participants/{participant}/approve', [EventController::class, 'approveJoinRequest'])->name('events.participants.approve');
+    Route::post('/events/{event}/participants/{participant}/reject', [EventController::class, 'rejectJoinRequest'])->name('events.participants.reject');
+    
     Route::get('/dashboard', [EventController::class, 'dashboard'])->name('events.dashboard');
     Route::get('/events/{eventId}/show', [EventController::class, 'show'])->name('events.show');
     Route::get('/my-events', [EventController::class, 'myEvents'])->name('events.my');

@@ -6,20 +6,20 @@
     <title>Manage Events</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-6">
+<body class="bg-gray-50 font-sans">
 
-    <div class="container mx-auto max-w-4xl">
-        <h1 class="text-3xl font-bold text-gray-700 mb-6">Manage Events</h1>
+    <div class="container mx-auto max-w-5xl p-6">
+        <h1 class="text-4xl font-bold text-gray-800 mb-8 text-center">Manage Events</h1>
 
         @foreach($events as $event)
-            <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
-                <h2 class="text-2xl font-semibold text-gray-800">{{ $event->title }}</h2>
-                <p class="text-gray-600 mt-2">{{ $event->description }}</p>
+            <div class="bg-white shadow-lg rounded-lg p-6 mb-8 border-l-4 border-blue-500 hover:shadow-xl transition duration-300">
+                <h2 class="text-3xl font-semibold text-gray-900">{{ $event->title }}</h2>
+                <p class="text-gray-600 mt-3 text-lg">{{ $event->description }}</p>
 
                 <!-- Actions -->
-                <div class="mt-4 flex gap-3">
+                <div class="mt-6 flex gap-4">
                     <a href="{{ route('events.edit', ['event' => $event->id]) }}"
-                       class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                       class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition transform hover:scale-105">
                         ✏️ Edit
                     </a>
 
@@ -27,36 +27,47 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit"
-                                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                                class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition transform hover:scale-105">
                             🗑️ Delete
                         </button>
                     </form>
                 </div>
 
                 <!-- Participants Section -->
-                <h3 class="text-xl font-semibold text-gray-700 mt-6">Participants</h3>
-                <div class="bg-gray-50 p-4 rounded-lg mt-2">
+                <h3 class="text-2xl font-semibold text-gray-700 mt-6">Participants</h3>
+                <div class="bg-gray-50 p-6 rounded-lg mt-4">
                     @if($event->participants->isEmpty())
-                        <p class="text-gray-500">No participants yet.</p>
+                        <p class="text-gray-500 text-center">No participants yet.</p>
                     @else
                         <ul class="divide-y divide-gray-300">
                             @foreach($event->participants as $participant)
-                                <li class="py-2 flex justify-between items-center">
-                                    <span class="text-gray-700 font-medium">
+                                <li class="py-4 flex justify-between items-center">
+                                    <span class="text-lg text-gray-800">
                                         {{ $participant->name }} (Status: 
-                                        <span class="font-bold {{ $participant->pivot->status == 'approved' ? 'text-green-600' : 'text-red-600' }}">
+                                        <span class="font-semibold 
+                                        {{ $participant->pivot->status == 'approved' ? 'text-green-600' : 'text-red-600' }}">
                                             {{ ucfirst($participant->pivot->status) }}
                                         </span>)
                                     </span>
-                                    <div class="flex gap-2">
-                                        <a href="{{ route('events.approve', ['participantId' => $participant->id]) }}"
-                                           class="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
-                                            ✅ Approve
-                                        </a>
-                                        <a href="{{ route('events.reject', ['participantId' => $participant->id]) }}"
-                                           class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
-                                            ❌ Reject
-                                        </a>
+
+                                    <div class="flex gap-4">
+                                        <!-- Approve Button -->
+                 <!-- Approve Button -->
+                 <form action="{{ route('events.participants.approve', ['event' => $event->id, 'participant' => $participant->id]) }}" method="POST" onsubmit="return confirmAction('approve');">
+                         @csrf
+                        <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+                            ✅ Approve
+                        </button>
+                    </form>
+
+                    <!-- Reject Button -->
+                    <form action="{{ route('events.participants.reject', ['event' => $event->id, 'participant' => $participant->id]) }}" method="POST" onsubmit="return confirmAction('reject');">
+                        @csrf
+                        <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                            ❌ Reject
+                        </button>
+                    </form>
+
                                     </div>
                                 </li>
                             @endforeach
@@ -70,6 +81,10 @@
     <script>
         function confirmDelete() {
             return confirm("Are you sure you want to delete this event?");
+        }
+
+        function confirmAction(action) {
+            return confirm(`Are you sure you want to ${action} this participant?`);
         }
     </script>
 

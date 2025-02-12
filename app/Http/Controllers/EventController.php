@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\EventParticipant;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use App\Models\User; 
 
 class EventController extends Controller
 {
@@ -173,38 +174,56 @@ class EventController extends Controller
         return redirect()->route('events.index')->with('success', 'Your request to join the event has been sent.');
     }
 
-    public function approveJoinRequest($participantId)
+    public function approveJoinRequest(Event $event, User $participant)
     {
-        $participant = EventParticipant::findOrFail($participantId);
-
-    
-        $event = $participant->event;
-        if ($event->user_id != Auth::id()) {
+        // Check if the event belongs to the logged-in user
+        if ($event->user_id !== Auth::id()) {
             return redirect()->route('events.index')->with('error', 'You are not authorized to approve this request.');
         }
-
-        $participant->status = 'confirmed';
-        $participant->save();
-
-        $this->sendApprovalEmail($participant);
-
+    
+        // Find the participant record for the event and the participant (user)
+        $eventParticipant = EventParticipant::where('event_id', $event->id)
+                                           ->where('user_id', $participant->id)
+                                           ->first();
+    
+        if (!$eventParticipant) {
+            return redirect()->route('events.index')->with('error', 'Participant request not found.');
+        }
+    
+        // Update the participant status
+        $eventParticipant->status = 'confirmed';
+        $eventParticipant->save();
+    
+        // Optionally, send an approval email
+        // $this->sendApprovalEmail($eventParticipant);
+    
         return redirect()->route('events.index')->with('success', 'Participant approved.');
     }
-
-    public function rejectJoinRequest($participantId)
+    
+    public function rejectJoinRequest(Event $event, User $participant)
     {
-        $participant = EventParticipant::findOrFail($participantId);
-
-        $event = $participant->event;
-        if ($event->user_id != Auth::id()) {
+        // Check if the event belongs to the logged-in user
+        if ($event->user_id !== Auth::id()) {
             return redirect()->route('events.index')->with('error', 'You are not authorized to reject this request.');
         }
-
-        $participant->status = 'rejected';
-        $participant->save();
-
+    
+        // Find the participant record for the event and the participant (user)
+        $eventParticipant = EventParticipant::where('event_id', $event->id)
+                                           ->where('user_id', $participant->id)
+                                           ->first();
+    
+        if (!$eventParticipant) {
+            return redirect()->route('events.index')->with('error', 'Participant request not found.');
+        }
+    
+        // Update the participant status
+        $eventParticipant->status = 'rejected';
+        $eventParticipant->save();
+    
         return redirect()->route('events.index')->with('success', 'Participant rejected.');
     }
+    
+    
 
     private function sendApprovalEmail($participant)
     {
