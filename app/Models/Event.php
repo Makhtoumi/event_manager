@@ -26,18 +26,25 @@ class Event extends Model
 
     }
 
+
+    protected $dates = ['date'];
+
+    protected $casts = [
+        'date' => 'datetime', // Cast 'date' to a Carbon instance
+    ];
     public function setStatus()
     {
         $now = Carbon::now();
         if ($this->date > $now) {
             $this->status = 'upcoming';
-        } elseif ($this->date <= $now && $this->date->addHours(24) >= $now) {
+        } elseif ($this->date <= $now && $this->date->copy()->addHours(24) >= $now) {
             $this->status = 'ongoing';
         } else {
             $this->status = 'completed';
         }
         $this->save();
     }
+
 
     
 }
